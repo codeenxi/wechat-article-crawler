@@ -1,0 +1,25 @@
+{
+  "name": "wechart-article-crawler",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "cuienxi <352287526@qq.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./bin/wechat_spider start"
+  },
+  "bin": {
+    "wechat_spider": "./bin/wechat_spider"
+  },
+  "dependencies": {
+    "anyproxy": "^4.0.4",
+    "commander": "^2.9.0",
+    "iconv": "^2.2.3",
+    "ip": "^1.1.5",
+    "koa": "^2.4.1",
+    "koa-router": "^7.3.0",
+    "koa2-cors": "^2.0.5",
+    "moment": "^2.24.0",
+    "openurl": "^1.1.1",
+    "socket.io": "^2.0.4"
+  }
+}

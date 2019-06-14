@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>招财大牛猫微信公众号内容测评</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.1.0/echarts.min.js"></script>
+</head>
+<body>
+    <div id="main" style="width: 100%;height:400px;"></div>
+    <script type="text/javascript" src="./data.js"></script>
+    <script type="text/javascript">
+        function getFormatDate(date) {
+            return date.getFullYear() + '-' +
+                ("0" + (date.getMonth() + 1)).slice(-2) + '-' +
+                ("0" + (date.getDate())).slice(-2);
+        }
+        function decodeHtml(html) {
+            var span = document.createElement("span");
+            span.innerHTML = html;
+            return $(span).text().trim();
+        }
+
+        // 只保留中文，字母，数字，进行比较
+        function allCN(str) {
+            var reg = /[^a-zA-Z0-9\u4E00-\u9FA5]/ig;
+            var ret = str.replace(reg, '');
+            return ret;
+        }
+
+        result = result.map(function (item, index) {
+            return {
+                index: index + 1,
+                title: item.title,
+                remark: item.digest,
+                time: getFormatDate(new Date(item.datetime * 1000)),
+                author: item.author,
+                postUser: item.account_name,
+                readNumber: item.read_num,
+                likeNum: item.like_num,
+                ourl: item.content_url,
+                comment: (item.elected_comment && item.elected_comment.length) || 0
+            }
+        });
+        var objectList = {
+        }
+        var temp;
+        result.forEach(function(item, index) {
+            var currnetItem = objectList[item.time];
+            if (!currnetItem) {
+               objectList[item.time] = {
+                    value: parseInt(item.readNumber),
+                    title: item.title,
+                    date:  item.time
+               }
+            } else {
+                temp = currnetItem
+                objectList[item.time] = {
+                    value: parseInt(item.readNumber) + temp.value,
+                    title: item.title + '<br>' + temp.title,
+                    date: item.time
+               }
+            }
+        })
+        var chartDateList = Object.keys(objectList);
+        var chartDataList = [];
+        chartDateList.forEach(function(item, index) {
+            chartDataList.push(objectList[item])
+        })
+        var myChart = echarts.init(document.getElementById('main'));
+        // 指定图表的配置项和数据
+        option = {
+            title: {
+                text: '招财大牛猫趋势',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    animation: false
+                },
+                formatter: function (param) {
+                    param = param[0];
+                    return [
+                        '标题：' + param['data'].title + '<br>', '阅读量：' + param['data'].value + '<br>', '时间：' + param['data'].date
+                    ].join('');
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: chartDateList.reverse()
+            },
+            yAxis: {
+                name: '阅读量（次）',
+                type: 'value',
+                max: 150000
+            },
+            series: [{
+                data: chartDataList.reverse(),
+                type: 'line',
+                smooth: true
+            }],
+            dataZoom: [{
+                startValue: '2014-03-07'
+            }, {
+                type: 'inside'
+            }]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+    <iframe src="./result.html" style="border: none;width:100%;height:1000px;"></iframe>
+</body>
+</html>

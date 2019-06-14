@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>爬取微信公众号</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+    <script src="./data.js"></script>
+</head>
+<style>
+    .text-ellipsis {
+        display: inline-block;
+        max-width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+<body>
+<table class="table table-bordered table-sm">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>标题</th>
+        <th>内容简介</th>
+        <th>公众号</th>
+        <th>时间</th>
+        <th>作者</th>
+        <th>阅读量</th>
+        <th>点赞</th>
+        <th>评论数</th>
+        <th>原文链接</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<script id="tmp" type="text/x-jquery-tmpl">
+    <tr>
+    <td>${index}</td>
+    <td class="text-nowrap">${title}</td>
+    <td>${remark}</td>
+    <td>${postUser}</td>
+    <td>${postDate}</td>
+    <td>${author}</td>
+    <td>${readNum}</td>
+    <td>${likeNum}</td>
+    <td>${comment}</td>
+    <td><a class="text-ellipsis" href="${ourl}" title="${ourl}" target="_blank">${ourl}</a></td>
+    </tr>
+</script>
+
+<script>
+    function getFormatDate(date) {
+        return date.getFullYear() + '-' +
+            ("0" + (date.getMonth() + 1)).slice(-2) + '-' +
+            ("0" + (date.getDate())).slice(-2) + ' ' +
+            ("0" + date.getHours()).slice(-2) + ':' +
+            ("0" + date.getMinutes()).slice(-2) + ':' +
+            ("0" + date.getSeconds()).slice(-2);
+    }
+    function decodeHtml(html) {
+        var span = document.createElement("span");
+        span.innerHTML = html;
+        return $(span).text().trim();
+    }
+
+    // 只保留中文，字母，数字，进行比较
+    function allCN(str) {
+        var reg = /[^a-zA-Z0-9\u4E00-\u9FA5]/ig;
+        var ret = str.replace(reg, '');
+
+        return ret;
+    }
+
+    var tmp = $('#tmp').html();
+    result.forEach(function (item, index) {
+        const d = {
+            index: index + 1,
+            title: item.title,
+            remark: item.digest,
+            postDate: getFormatDate(new Date(item.datetime * 1000)),
+            author: item.author,
+            postUser: item.account_name,
+            readNum: item.read_num,
+            likeNum: item.like_num,
+            ourl: item.content_url,
+            comment: (item.elected_comment && item.elected_comment.length) || 0
+        };
+        d.title = decodeHtml(item.title);
+        $.tmpl(tmp, d).appendTo("tbody");
+    });
+
+</script>
+</body>
+</html>

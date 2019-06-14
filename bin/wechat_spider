@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var pkg = require('../package.json');
+program
+  .version(pkg.version, '-v, --version');
+program
+    .command('start')
+    .description('run start command with options， -c with count，-s for if show sub article')
+    .option("-c, --count [number]", "craw article number")
+    .option("-s, --sub", "if craw sub article")
+    .action(function(options){
+        const count = options.count || 'all';
+        const showSubArticle = options.sub || false;
+        console.log('start spider with %s articles, ',count);
+        const WechatSpider = require('../index');
+        const spider = new WechatSpider({
+            totalCount: count,
+            crawSubArticle: showSubArticle
+        });
+        spider.start();
+    });
+program.parse(process.argv);
