@@ -22,17 +22,3 @@ delete header['Content-Security-Policy-Report-Only'];
  header['Expires'] = 0;
  header['Cache-Control'] = 'no-cache, no-store, must-revalidate';
 ```
-
-
-## 如何运行
-第一步，一定要安装成功anyproxy，这一步请详细阅读[anyproxy的官方教程](http://anyproxy.io/cn/)，写的很详细，要保证能成功代理https，能查看到https的body内容。
-
-```
-yarn install
-yarn start
-```
-会自动打开一个result.html，实时查看爬取文章的内容
-点击一个微信公众号，点击查看历史消息，之后历史页面会不停的滚动到底，滚动完毕，就开始一篇一篇打开文章，爬取内容。
-![实时结果显示](http://upload-images.jianshu.io/upload_images/2058960-da9d9bae50979ad3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/800)
-
-
