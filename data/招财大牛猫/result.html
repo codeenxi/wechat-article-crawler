@@ -53,28 +53,31 @@
 
 <script>
     function getFormatDate(date) {
-        return date.getFullYear() + '-' +
-            ("0" + (date.getMonth() + 1)).slice(-2) + '-' +
-            ("0" + (date.getDate())).slice(-2) + ' ' +
-            ("0" + date.getHours()).slice(-2) + ':' +
-            ("0" + date.getMinutes()).slice(-2) + ':' +
-            ("0" + date.getSeconds()).slice(-2);
+        return [
+                date.getFullYear(),
+                ("0" + (date.getMonth() + 1)).slice(-2),
+                ("0" + (date.getDate())).slice(-2)
+            ].join('-')
+            + ' '
+            + [
+                ("0" + date.getHours()).slice(-2),
+                ("0" + date.getMinutes()).slice(-2),
+                ("0" + date.getSeconds()).slice(-2)
+            ].join(':')
     }
     function decodeHtml(html) {
-        var span = document.createElement("span");
+        const span = document.createElement("span");
         span.innerHTML = html;
         return $(span).text().trim();
     }
 
     // 只保留中文，字母，数字，进行比较
     function allCN(str) {
-        var reg = /[^a-zA-Z0-9\u4E00-\u9FA5]/ig;
-        var ret = str.replace(reg, '');
-
-        return ret;
+        const reg = /[^a-zA-Z0-9\u4E00-\u9FA5]/ig;
+        return str.replace(reg, '');
     }
 
-    var tmp = $('#tmp').html();
+    const tmp = $('#tmp').html();
     result.forEach(function (item, index) {
         const d = {
             index: index + 1,
@@ -91,7 +94,6 @@
         d.title = decodeHtml(item.title);
         $.tmpl(tmp, d).appendTo("tbody");
     });
-
 </script>
 </body>
 </html>

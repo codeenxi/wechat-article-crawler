@@ -10,21 +10,23 @@
     <script type="text/javascript" src="./data.js"></script>
     <script type="text/javascript">
         function getFormatDate(date) {
-            return date.getFullYear() + '-' +
-                ("0" + (date.getMonth() + 1)).slice(-2) + '-' +
-                ("0" + (date.getDate())).slice(-2);
+            return [
+                date.getFullYear(),
+                ("0" + (date.getMonth() + 1)).slice(-2),
+                ("0" + (date.getDate())).slice(-2)
+            ].join('-');
         }
+
         function decodeHtml(html) {
-            var span = document.createElement("span");
+            const span = document.createElement("span");
             span.innerHTML = html;
             return $(span).text().trim();
         }
 
         // 只保留中文，字母，数字，进行比较
         function allCN(str) {
-            var reg = /[^a-zA-Z0-9\u4E00-\u9FA5]/ig;
-            var ret = str.replace(reg, '');
-            return ret;
+            const reg = /[^a-zA-Z0-9\u4E00-\u9FA5]/ig;
+            return str.replace(reg, '');
         }
 
         result = result.map(function (item, index) {
@@ -41,11 +43,12 @@
                 comment: (item.elected_comment && item.elected_comment.length) || 0
             }
         });
-        var objectList = {
-        }
-        var temp;
+
+        const objectList = {
+        };
+        let temp;
         result.forEach(function(item, index) {
-            var currnetItem = objectList[item.time];
+            let currnetItem = objectList[item.time];
             if (!currnetItem) {
                objectList[item.time] = {
                     value: parseInt(item.readNumber),
@@ -53,20 +56,20 @@
                     date:  item.time
                }
             } else {
-                temp = currnetItem
+                temp = currnetItem;
                 objectList[item.time] = {
                     value: parseInt(item.readNumber) + temp.value,
                     title: item.title + '<br>' + temp.title,
                     date: item.time
                }
             }
-        })
-        var chartDateList = Object.keys(objectList);
-        var chartDataList = [];
+        });
+        const chartDateList = Object.keys(objectList);
+        const chartDataList = [];
         chartDateList.forEach(function(item, index) {
             chartDataList.push(objectList[item])
-        })
-        var myChart = echarts.init(document.getElementById('main'));
+        });
+        const myChart = echarts.init(document.getElementById('main'));
         // 指定图表的配置项和数据
         option = {
             title: {
